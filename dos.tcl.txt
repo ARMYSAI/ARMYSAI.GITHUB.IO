@@ -1,0 +1,42 @@
+$getit dos.tcl
+#create node
+set server1 [$ns node]
+set server2 [$ns node]
+set client1 [$ns node]
+set client2 [$ns node]
+set attacker [$ns node]
+#connection
+$ns duplex-link $client1 $server1 12mb 100ms droptail
+$ns duplex-link $client2 $server2 12mb 100ms droptail
+$ns duplex-link $attacker $server1 12mb 100ms droptail
+$ns duplex-link $server1 $server2 6mb 200ms droptail
+# create agents
+set udp1 [new Agent/UDP]
+$ns attach-agent $client1 $udp1
+$ns udp2-agent $client1 $udp1
+$ns attach-agent $client2 $udp2
+$ns udp3-agent $client1 $udp1
+$ns attach-agent $attacker $udp3
+set null [null Agent/Null]
+$ns connect $udp1 $null 
+$ns connect $udp2 $null
+$ns connect $udp3 $null
+#traffic
+set cbr1 [new Application/Traffic/CBR]
+$cbr1 attach-agent $udp1
+$cbr1 set packet_size_7000
+$cbr1 set rate_0.4mb
+$cbr1 set random_false
+$cbr1 set interval_0.08
+set cbr2 [new Application/Traffic/CBR]
+$cbr2 attach-agent $udp2
+$cbr1 set packet_size_4000
+$cbr1 set rate_0.6mb
+$cbr1 set random_false
+$cbr1 set interval_0.05
+
+
+
+
+
+

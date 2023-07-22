@@ -1,0 +1,19 @@
+getit stable.tcl
+
+#create a simulator
+set ns [new simulator]
+# create trace file
+set trace file [open stable tr w]
+$ ns trace-all $tracefile
+#  file creation
+set name file [open stable.nam w]
+$ns namtrace.all $namfile
+# finish procedure
+proc finish {} { 
+golbal ns tracefile namfile
+$ns flush-trace
+close $tracefile
+close $namfile
+exe nam stable.nam &
+exit 0
+}  

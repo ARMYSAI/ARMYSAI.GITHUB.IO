@@ -1,0 +1,23 @@
+# node ctreation
+set n1 [$ns node]
+set n2 [$ns node]
+#connection
+$ns duplex.link $n1 $n2 5mb 2ms DropTail
+# agent creation
+set udp [new Agent/TCP]
+$tcp set class_2
+$ns attach-agent $n1 $udp
+set null [new Agent/Tcp Sink]
+$ns attach-agent $n2 $sink
+$ns connect $udp $sink
+# generate the traffic
+set cbrstable [new Application/FTP]
+$ftpstable attach.agent $tcp
+$ftp stable set type_ftp
+$ftp stable set packet_size_1000
+$ftp stable set rate_1mb
+#start traffic
+$ns at 0.1 "$ftp stable start"
+$ns at 4.5 "$ftp stable stop"
+$ns at 5.0 "finish"
+$ns run
